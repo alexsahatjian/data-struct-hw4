@@ -1,85 +1,130 @@
-// hw5.cpp : This file contains the 'main' function. Program execution begins and ends there.
-#include <iostream>
-#include <cstdlib>
+#include <iostream> 
+#include <fstream>
+#include <string>
 
 using namespace std;
 
-struct Node{
-    string task;
-    struct Node* next;
+class Node{
+public:
+    int data;
+    node *next;
 };
+class List {
+public:
+    node* head;
+    List();
+    void Add(int n){
+        node* item = new node;
+        item->data = n;
+        item->next = head;
+        head = item;
+    }
+    void Print(string *arr){
+        node* item = head;
+        cout << "Topological Sort: \n";
+        while (item != NULL) {
+            cout << "Task " << item->data + 1 << ": " << arr[item->data] << endl;
+            item = item->next;
+        }
+        cout << endl;
+    }
 
-struct List{
-    struct Node* head;
 };
 
 class Graph{
-private:
-    int V;
-    List* array;
-public:
-    Graph(int V){
-        this->V = V;
-        array = new List[V];		 
-        for (int i = 0; i < V; ++i)
-            array[i].head = NULL;  		
+    public:
+    node *head = new node[task];
+    int* visit = new int[task];
+    List list;
+
+    Graph(int size){
+        int i; 
+        for (i = 0; i < size; i++) {
+            node* newnode = new node();
+            head[i] = *newnode;
+            head[i].data = i;
+        }
     }
 
-    /*
-     * Adding Edge to Graph
-     */
-    void addEdge(int src, int dest){
-        Node* newNode = new Node;  
-        newNode->task = dest;					
-        newNode->next = NULL;		
-                                                
-        newNode->next = array[src].head;		
-        array[src].head = newNode;				
-
+    void Add(int first, int second){
+        node* item = new node();
+        item->data = second-1;
+        node* temp = &head[first-1];
+        while (temp->next != NULL) {
+            temp = temp->next;
+        }
+        temp->next = item;
     }
-    /*
-     * Print the graph
-     */
-    void printGraph(){
-        int v;
-        for (v = 0; v < V; ++v){
-            Node* tmp = array[v].head;		//tmp has the address of (0,1..)vertex head 
-            cout << "\n Adjacency list of vertex " << v << "\n head ";
-            while (tmp){
-                cout << "-> " << tmp->task;
-                tmp = tmp->next;
+
+    void Visit() {
+        int i;
+        for (i = 0; i < task; i++) {
+            visit[i] = 0;
+        }
+    }
+
+    void Sort(){
+        int* r = new int[task];
+        Visit();
+        int i;
+        for (i = 0; i < task; i++) {
+            if (visit[i] == 0) {
+                DFS(i);
+            }
+        }
+    }
+
+    void DFS(int i){
+        visit[i] = 1;
+        node* temp = &head[i];
+        temp = temp->next;
+        while (temp != NULL) {
+            if (visit[temp->data] == 0) {
+                DFS(temp->data);
+            }
+            temp = temp->next;
+        }
+        list.Add(i);
+    }
+
+    void Print(){
+        int i;
+        for (i = 0; i < task; i++) {
+            node* temp = &head[i];
+            while (temp != NULL) {
+                cout << temp->data + 1 << " -> ";
+                temp = temp->next;
             }
             cout << endl;
         }
     }
 };
 
-
-int main(){
-    // Total number of tasks
+int main()
+{
     int num_task; // task
-    int i, operation;
+    int i, operation; 
     int first_task, sec_task;
-
+    
     cout << "Enter number of tasks: ";
     cin >> num_task;
 
     // Diagraph class D1(num_task);
-    auto arr{ new string[num_task] };
+    auto arr{ new string[num_task]};
 
     for (i = 0; i < num_task; i++) {
         cout << "Enter the task " << i + 1 << ": ";
         getline(cin >> ws, arr[i]);
     }
-
+    
     cout << "\nType 1 -> Relation Input\n";
     cout << "Type 2 -> Perform Topological Sort\n";
     cout << "Type 3 -> Adjacency List\n";
     cout << "Type 0 -> Quit\nEnter operation: ";
     cin >> operation;
 
-    while (operation != 0) {
-        if (operation == 1) {
+    while (operation != 0){
+        if (operation == 1){
             cout << "\nTask entered first precededs the second\n";
             cout << "Enter first task: ";
             cin >> first_task;
@@ -88,12 +133,12 @@ int main(){
             // Add relation to Diagraph
         }
 
-        else if (operation == 2) {
+        else if (operation == 2){
             // Perform Topological Sort
-            cout << "222 sucess\n";
+            cout<< "222 sucess\n";
         }
 
-        else {
+        else{
             // Print the adjacency list
             cout << "33 sucess\n";
         }
